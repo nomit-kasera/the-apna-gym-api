@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "members",
+  "info": {
+    "singularName": "member",
+    "pluralName": "members",
+    "displayName": "Member"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "full_name": {
+      "type": "string",
+      "required": true
+    },
+    "phone_number": {
+      "type": "biginteger",
+      "required": true,
+      "unique": true
+    },
+    "email": {
+      "type": "email",
+      "unique": true
+    },
+    "membership_type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "monthly",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "yearly"
+      ]
+    },
+    "start_date": {
+      "type": "date",
+      "required": true
+    },
+    "end_date": {
+      "type": "date",
+      "required": true
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "membership_status": {
+      "type": "enumeration",
+      "default": "active",
+      "enum": [
+        "active",
+        "expired",
+        "expiring_soon"
+      ]
+    }
+  }
+}
