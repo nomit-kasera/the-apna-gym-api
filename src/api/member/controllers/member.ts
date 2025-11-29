@@ -43,7 +43,7 @@ export default factories.createCoreController("api::member.member", ({ strapi })
 
             expiringByMonth[month] = (expiringByMonth[month] || 0) + 1;
         });
-        
+
         // 6) Membership Breakdown
         const membershipBreakdown = {
             monthly: 0,
@@ -75,6 +75,27 @@ export default factories.createCoreController("api::member.member", ({ strapi })
 
         return latest;
     },
+
+    async searchByPhone(ctx) {
+        const phone = ctx.request.query.phone;
+
+        if (!phone) {
+            return ctx.badRequest("Phone number is required");
+        }
+
+        const member = await strapi.db.query("api::member.member").findOne({
+            where: {
+                phone_number: phone,
+                publishedAt: { $notNull: true },
+            },
+        });
+
+        if (!member) {
+            return ctx.notFound("Member not found");
+        }
+
+        return member;
+    }
 
 
 }));
