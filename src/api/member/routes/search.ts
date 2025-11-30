@@ -4,6 +4,9 @@ export default {
       method: "GET",
       path: "/member/search",
       handler: "member.searchByPhone",
+      config: {
+        auth: false,
+      },
     },
   ],
 };

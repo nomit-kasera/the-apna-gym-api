@@ -31,7 +31,8 @@
       "enum": [
         "monthly",
         "quarterly",
-        "yearly"
+        "yearly",
+        "half yearly"
       ]
     },
     "start_date": {

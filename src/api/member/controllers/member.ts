@@ -17,45 +17,55 @@ export default factories.createCoreController("api::member.member", ({ strapi })
             },
         });
 
-        // 3) Fetch *only* published members for revenue + expiry
+        // 3) Fetch published members
         const members = await strapi.db.query("api::member.member").findMany({
             where: { publishedAt: { $notNull: true } },
         });
 
+        // 🔥 Normalize membership values
+        const normalize = (val) =>
+            val?.toLowerCase().replace(/\s+/g, "") || "";
+
+        // Pricing table
         const PRICES = {
-            monthly: 999,
-            quarterly: 3499,
+            monthly: 1099,
+            quarterly: 2699,
+            halfyearly: 5099,
             yearly: 9999,
         };
 
         // 4) Calculate revenue
         let monthlyRevenue = 0;
         members.forEach((m) => {
-            monthlyRevenue += PRICES[m.membership_type] || 0;
+            const key = normalize(m.membership_type);
+            monthlyRevenue += PRICES[key] || 0;
         });
 
-        // 5) Calculate expiring per month
-        const expiringByMonth: Record<string, number> = {};
+        // 5) Expiring per month
+        const expiringByMonth = {};
 
         members.forEach((m) => {
             const end = new Date(m.end_date);
             const month = end.toLocaleString("en-US", { month: "long" });
-
             expiringByMonth[month] = (expiringByMonth[month] || 0) + 1;
         });
 
-        // 6) Membership Breakdown
+        // 6) Membership Breakdown (Safe)
         const membershipBreakdown = {
             monthly: 0,
             quarterly: 0,
+            halfyearly: 0,
             yearly: 0,
         };
 
         members.forEach((m) => {
-            membershipBreakdown[m.membership_type] += 1;
+            const key = normalize(m.membership_type);
+            if (membershipBreakdown[key] !== undefined) {
+                membershipBreakdown[key] += 1;
+            }
         });
 
-        // 7) Return full combined stats
+        // 7) Return result
         return {
             totalMembers,
             activeMembers,
