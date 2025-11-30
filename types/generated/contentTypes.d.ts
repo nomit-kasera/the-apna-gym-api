@@ -496,7 +496,7 @@ export interface ApiMemberMember extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.DefaultTo<'active'>;
     membership_type: Schema.Attribute.Enumeration<
-      ['monthly', 'quarterly', 'yearly', 'halfyearly']
+      ['monthly', 'quarterly', 'yearly', 'half yearly']
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'monthly'>;
